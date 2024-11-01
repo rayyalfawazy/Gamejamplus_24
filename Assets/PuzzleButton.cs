@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PuzzleButton : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private int puzzleId;
+    public int PuzzleID {  get { return puzzleId; } set { puzzleId = value; } }
+
+    public Sprite hiddenSprite;
+    public Sprite defaultSprite;
+
+    private void Start()
     {
-        
+        Button button = GetComponent<Button>();
+        button.onClick.AddListener(HandleButtonClick);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void HandleButtonClick()
     {
-        
+        FindAnyObjectByType<PuzzleManager>().SelectPuzzle(this);
     }
 }

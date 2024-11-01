@@ -294,6 +294,7 @@ GameObject:
   - component: {fileID: 787417768}
   - component: {fileID: 787417767}
   - component: {fileID: 787417769}
+  - component: {fileID: 787417770}
   m_Layer: 0
   m_Name: PuzzleManager
   m_TagString: Untagged
@@ -315,7 +316,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzlePanel: {fileID: 1295656371}
   puzzleButton: {fileID: 6948516294515245084, guid: ad4be8dc24c649041a277027e854e6a6, type: 3}
-  puzzleAmount: 10
+  fillSprite:
+  - {fileID: -9095717837082945937, guid: 8fe2f2e20419fd347b00e57a727c6557, type: 3}
+  - {fileID: -2413806693520163455, guid: bc47f2d213a8b8048a281dd7bb43d0e4, type: 3}
+  - {fileID: 7482667652216324306, guid: 2a9224936b6a13f41a9e4c4829904ce1, type: 3}
 --- !u!4 &787417768
 Transform:
   m_ObjectHideFlags: 0
@@ -345,7 +349,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifePanel: {fileID: 1650759084}
   lifeImage: {fileID: 7517153821906133474, guid: c6cc1998c9a0b1041b830a16f2f81110, type: 3}
+--- !u!114 &787417770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787417766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 145f3d9bd2ec2034592ddb8a8d61cce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  puzzleAmount: 6
   lifeAmount: 3
+  resetDuration: 1.5
 --- !u!1 &1295656370
 GameObject:
   m_ObjectHideFlags: 0
