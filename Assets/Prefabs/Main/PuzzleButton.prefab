@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6948516294515245084}
   - component: {fileID: 5786226851323882057}
   - component: {fileID: 8373926071476016467}
+  - component: {fileID: 484262869558491499}
   m_Layer: 5
   m_Name: PuzzleButton
   m_TagString: PuzzleButton
@@ -60,7 +61,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hiddenSprite: {fileID: 0}
-  defaultSprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  defaultSprite: {fileID: -402043913, guid: a9a975483569a1a47be017d98e3b58cd, type: 3}
+  anim: {fileID: 484262869558491499}
 --- !u!114 &5786226851323882057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,8 +83,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -402043913, guid: a9a975483569a1a47be017d98e3b58cd, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -135,3 +137,24 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &484262869558491499
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2777118714357922356}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b1f47176048424d41b83a51532f39d9d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
