@@ -10,35 +10,32 @@ public class PuzzleManager : MonoBehaviour
     private LoadPuzzle loadPuzzle; // Referensi ke skrip LoadPuzzle
     private LifeManager lifeManager; // Referensi ke skrip LoadLife
     private PuzzleUI puzzleUI; // Referensi ke skrip UI Puzzle
+    private PuzzleAudio puzzleAudio;
 
     [Header("Puzzle Settings")]
     [SerializeField] private int puzzleAmount; // Jumlah puzzle untuk di-load
     [SerializeField] private int lifeAmount; // Jumlah nyawa untuk di-load
     [SerializeField] private float resetDuration; // Durasi Delay sebelum Reset (Saat Salah)
 
-    [Header("Debug Variable")]
-    [SerializeField] private int attemptCount;
-    [SerializeField] private int wrongAttemptStreak = 0;
-
+    private int attemptCount;
+    private int wrongAttemptStreak = 0;
+    private int winCount;
+    private int bestWinCount;
     private List<PuzzleButton> selectedPuzzles = new List<PuzzleButton>();
 
     // Singleton Pattern
-    private void Awake()
-    {
-        if (instance != null)
-        {
-            Destroy(instance);
-        } else
-        {
-            instance = this;
-            DontDestroyOnLoad(instance);
-        }
-    }
-
-    private void OnDisable()
-    {
-        StopAllCoroutines();
-    }
+    //private void Awake()
+    //{
+    //    if (instance != null)
+    //    {
+    //        Destroy(instance);
+    //        StopAllCoroutines();
+    //    } else
+    //    {
+    //        instance = this;
+    //        DontDestroyOnLoad(instance);
+    //    }
+    //}
 
     private void Start()
     {
@@ -46,6 +43,7 @@ public class PuzzleManager : MonoBehaviour
         lifeManager = GetComponent<LifeManager>();
         loadPuzzle = GetComponent<LoadPuzzle>();
         puzzleUI = GetComponent<PuzzleUI>();
+        puzzleAudio = GetComponent<PuzzleAudio>();
 
         InitialStart();
     }
@@ -55,6 +53,10 @@ public class PuzzleManager : MonoBehaviour
         // Memulai game dengan memuat puzzle dan mengatur nyawa
         loadPuzzle.SetupPuzzle(puzzleAmount);
         lifeManager.SetupLives(lifeAmount);
+        puzzleUI.AddWinCount(winCount);
+
+        bestWinCount = PlayerPrefs.GetInt("WinCount");
+        puzzleUI.AddBestWinCount(bestWinCount);
     }
 
     public void SelectPuzzle(PuzzleButton pb)
@@ -62,8 +64,7 @@ public class PuzzleManager : MonoBehaviour
         if (selectedPuzzles.Contains(pb) || selectedPuzzles.Count >= 2) return;
         if (pb.IsCorrectMatch) return; // Periksa apakah button merupakan correct match
 
-        pb.FlipAnimation();
-
+        pb.OpenAnimation();
         selectedPuzzles.Add(pb);
 
         // Memeriksa jika dua puzzle telah dipilih
@@ -86,7 +87,7 @@ public class PuzzleManager : MonoBehaviour
 
         if (loadPuzzle.puzzleButtonList.Count == 0)
         {
-            Debug.Log("Game Finished");
+            GameWin();
         }
 
         attemptCount++;
@@ -94,6 +95,7 @@ public class PuzzleManager : MonoBehaviour
 
     private void HandleCorrectMatch()
     {
+        puzzleAudio.PlaySFX("Correct");
         foreach (PuzzleButton pb in selectedPuzzles)
         {
             pb.IsCorrectMatch = true;
@@ -102,11 +104,11 @@ public class PuzzleManager : MonoBehaviour
 
         // Jika cocok, biarkan tetap terbuka
         selectedPuzzles.Clear();
-        Debug.Log("Correct Match");
     }
 
     private void HandleWrongMatch()
     {
+        puzzleAudio.PlaySFX("Incorrect");
         wrongAttemptStreak++;
         lifeManager.HalfLife();
         if (wrongAttemptStreak >= 2)
@@ -116,10 +118,10 @@ public class PuzzleManager : MonoBehaviour
 
             if (lifeManager.IsDead)
             {
-                GameOver();
+                GameLost();
             }
         }
-        Debug.Log("Wrong Match");
+
         StartCoroutine(ResetInDelay(resetDuration));
     }
 
@@ -134,14 +136,68 @@ public class PuzzleManager : MonoBehaviour
     {
         foreach (PuzzleButton pb in selectedPuzzles)
         {
-            pb.BackflipAnimation();
+            pb.CloseAnimation();
         }
     }
 
-    private void GameOver()
+    private void GameLost()
     {
-        // Logika saat game over
         puzzleUI.ShowGameOverUI();
-        Debug.Log("Game Over! You have no lives left.");
+    }
+
+    private void GameWin()
+    {
+        winCount++;
+        if (bestWinCount >= winCount)
+        {
+            PlayerPrefs.SetInt("WinCount", winCount);
+            bestWinCount = PlayerPrefs.GetInt("WinCount");
+        }
+
+        puzzleUI.AddWinCount(winCount);
+        puzzleUI.AddBestWinCount(bestWinCount);
+
+        // Mulai Coroutine untuk restart game dengan delay
+        StartCoroutine(RestartGameInDelay(resetDuration));
+    }
+
+    private IEnumerator RestartGameInDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // Hapus semua PuzzleButton dari puzzlePanel sebelum reset
+        ClearPanel();
+        ResetLife();
+
+        // Reset nilai-nilai game yang diperlukan
+        selectedPuzzles.Clear();
+        loadPuzzle.puzzleButtonList.Clear();
+        wrongAttemptStreak = 0; // Reset streak kesalahan
+
+        // Atur ulang puzzle dengan ID yang diacak ulang
+        loadPuzzle.SetupPuzzle(puzzleAmount);
+        lifeManager.SetupLives(lifeAmount);
+
+        StopAllCoroutines();
+
+    }
+    
+    private void ClearPanel()
+    {
+        foreach (Transform loadedButton in loadPuzzle.puzzlePanel.transform)
+        {
+            Destroy(loadedButton.gameObject);
+        }
+    }
+
+    // Fungsi untuk menghapus dan mengatur ulang jumlah Life
+    private void ResetLife()
+    {
+        // Hapus semua Life di dalam LifeManager
+        foreach (Transform child in lifeManager.lifePanel.transform)
+        {
+            Destroy(child.gameObject);
+            lifeManager.lifeIcons.Clear();
+        }
     }
 }

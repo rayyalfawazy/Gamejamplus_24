@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class LoadPuzzle : MonoBehaviour
 {
     [Header("Puzzle UI")]
-    [SerializeField] private GridLayoutGroup puzzlePanel;
+    [SerializeField] public GridLayoutGroup puzzlePanel;
     [SerializeField] private PuzzleButton puzzleButton;
     [SerializeField] private List<Sprite> fillSprite;
 
@@ -44,7 +44,7 @@ public class LoadPuzzle : MonoBehaviour
         {
             PuzzleButton button = Instantiate(puzzleButton, puzzlePanel.transform);
             button.PuzzleID = puzzleIDs[i];
-            button.hiddenSprite = fillSprite[button.PuzzleID]; // Mengaitkan sprite berdasarkan PuzzleID
+            button.transform.GetChild(0).GetComponent<Image>().sprite = fillSprite[button.PuzzleID]; // Mengaitkan sprite berdasarkan PuzzleID
             button.name = "PuzzleButton" + " " + button.PuzzleID;
             puzzleButtonList.Add(button);
         }

@@ -6,10 +6,11 @@ using UnityEngine.UI;
 public class LifeManager : MonoBehaviour
 {
     [Header("Life UI")]
-    [SerializeField] private HorizontalLayoutGroup lifePanel;
+    [SerializeField] public HorizontalLayoutGroup lifePanel;
     [SerializeField] private Image lifeImage;
+    [SerializeField] private Sprite[] lifeSprite;
 
-    private List<Image> lifeIcons = new List<Image>();
+    public List<Image> lifeIcons = new List<Image>();
     private bool isDead = false;
 
     public bool IsDead {  get { return isDead; } }
@@ -20,6 +21,7 @@ public class LifeManager : MonoBehaviour
         {
             Image lifeIcon = Instantiate(lifeImage, lifePanel.transform);
             lifeIcons.Add(lifeIcon);
+            lifeIcon.sprite = lifeSprite[0];
             lifeIcon.name = "PuzzleButton" + i.ToString();
         }
     }
@@ -31,7 +33,7 @@ public class LifeManager : MonoBehaviour
             // Mengubah ikon saat nyawa habis
             Image lifeIcon = lifeIcons[^1];
             lifeIcons.Remove(lifeIcon);
-            lifeIcon.color = Color.gray;
+            lifeIcon.sprite = lifeSprite[2];
 
             if (lifeIcons.Count == 0)
             {
@@ -45,7 +47,7 @@ public class LifeManager : MonoBehaviour
         if (lifeIcons.Count > 0)
         {
             Image lifeIcon = lifeIcons[^1];
-            lifeIcon.color = new Color(0.51f, 0.26f, 0.26f, 1f);
+            lifeIcon.sprite = lifeSprite[1];
         }
     }
 }
