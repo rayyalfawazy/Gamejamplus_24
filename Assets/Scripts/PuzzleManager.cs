@@ -23,20 +23,6 @@ public class PuzzleManager : MonoBehaviour
     private int bestWinCount;
     private List<PuzzleButton> selectedPuzzles = new List<PuzzleButton>();
 
-    // Singleton Pattern
-    //private void Awake()
-    //{
-    //    if (instance != null)
-    //    {
-    //        Destroy(instance);
-    //        StopAllCoroutines();
-    //    } else
-    //    {
-    //        instance = this;
-    //        DontDestroyOnLoad(instance);
-    //    }
-    //}
-
     private void Start()
     {
         // Mengambil komponen dalam satu objek
@@ -148,7 +134,7 @@ public class PuzzleManager : MonoBehaviour
     private void GameWin()
     {
         winCount++;
-        if (bestWinCount >= winCount)
+        if (winCount >= bestWinCount)
         {
             PlayerPrefs.SetInt("WinCount", winCount);
             bestWinCount = PlayerPrefs.GetInt("WinCount");
